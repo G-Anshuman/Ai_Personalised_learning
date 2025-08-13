@@ -1,0 +1,61 @@
+QuestionID,subtopic,type,difficulty,question_text,OptionA,OptionB,OptionC,OptionD,Correct_Option
+1,Percentages,Diagnostic,Speed Test,What is 25% of 200?,25,50,75,100,B
+2,Percentages,Diagnostic,Speed Test,50 is what percent of 200?,20,25,30,40,B
+3,Percentages,Adaptive,Speed Test,"If 10% of a number is 50, what is the number?",400,500,600,700,B
+4,Percentages,Adaptive,Speed Test,What is 12% of 250?,25,30,28,32,B
+5,Percentages,Adaptive,Speed Test,60 is 30% of what number?,100,150,180,200,D
+6,Percentages,Adaptive,Speed Test,What percent of 400 is 60?,10,12,15,18,C
+7,Percentages,Adaptive,Speed Test,Increase 200 by 15%.,210,220,225,230,D
+8,Percentages,Adaptive,Speed Test,Decrease 400 by 25%.,300,310,320,330,A
+9,Percentages,Adaptive,Speed Test,75 is 25% of what number?,250,300,325,350,B
+10,Percentages,Adaptive,Speed Test,40% of a number is 80. Find the number.,180,190,200,210,C
+11,Percentages,Diagnostic,Level 1,"If a shirt costs ₹800 and is discounted by 10%, what is the final price?",700,720,730,750,720
+12,Percentages,Diagnostic,Level 1,What is 18% of 450?,81,80,79,82,81
+13,Percentages,Diagnostic,Level 1,"If a number is increased by 20% and then decreased by 20%, the net change is?",0%,2%,4%,5%,4%
+14,Percentages,Diagnostic,Level 1,Find the percentage increase from 80 to 100.,20%,25%,15%,18%,25%
+15,Percentages,Diagnostic,Level 1,15 is what percent of 60?,20%,25%,30%,35%,25%
+16,Percentages,Adaptive,Level 1,"A book costs ₹500. After 10% discount, find the price.",450,460,470,480,450
+17,Percentages,Adaptive,Level 1,Increase 240 by 12%.,260.8,268.8,270,275,268.8
+18,Percentages,Adaptive,Level 1,What is 45% of 320?,140,144,148,150,144
+19,Percentages,Adaptive,Level 1,Find the percentage decrease from 500 to 450.,8%,9%,10%,11%,10%
+20,Percentages,Adaptive,Level 1,72 is 80% of what number?,85,88,90,92,90
+21,Percentages,Adaptive,Level 1,A fruit seller bought apples at ₹40/kg and sold at ₹50/kg. Find profit %.,20%,25%,30%,35%,25%
+22,Percentages,Adaptive,Level 1,"If 15% of x is 45, find x.",280,290,300,310,300
+23,Percentages,Adaptive,Level 1,Find the percentage increase from 60 to 75.,20%,22%,24%,25%,25%
+24,Percentages,Adaptive,Level 1,The population increased from 5000 to 5500. Find the % increase.,8%,9%,10%,11%,10%
+25,Percentages,Adaptive,Level 1,200 ml is what % of 1 litre?,10%,15%,20%,25%,20%
+26,Percentages,Adaptive,Level 1,"A TV is sold for ₹18,000 after 10% discount. Find its marked price.","19,800","19,900","20,000","20,100","20,000"
+27,Percentages,Adaptive,Level 1,"If 25% of a number is 75, what is the number?",280,290,300,310,300
+28,Percentages,Adaptive,Level 1,Find the percentage decrease from 240 to 180.,20%,22%,25%,28%,25%
+29,Percentages,Adaptive,Level 1,Increase ₹800 by 7.5%.,850,860,860.5,870,860
+30,Percentages,Adaptive,Level 1,60% of a number is 120. Find the number.,190,195,200,210,200
+31,Percentages,Adaptive,Level 1,A student scored 120 marks out of 200. Find % score.,58%,59%,60%,61%,60%
+32,Percentages,Adaptive,Level 1,"If the price increases from ₹500 to ₹550, find the % change.",8%,9%,10%,11%,10%
+33,Percentages,Adaptive,Level 1,"40% of a class are girls. If there are 20 girls, find total students.",48,49,50,51,50
+34,Percentages,Adaptive,Level 1,A shopkeeper bought a toy for ₹400 and sold it for ₹500. Profit %?,20%,22%,24%,25%,25%
+35,Percentages,Adaptive,Level 1,The price of sugar increases from ₹40/kg to ₹50/kg. Find % increase.,20%,22%,24%,25%,25%
+36,Percentages,Diagnostic,Level 2,A price is increased by 20% and then decreased by 20%. Net change?,0%,-4%,4%,-2%,-4%
+37,Percentages,Diagnostic,Level 2,The population of a town increases by 10% in one year and then by 20% the next year. Overall % increase?,30%,32%,33%,31%,32%
+38,Percentages,Diagnostic,Level 2,A man spends 85% of his income and saves ₹900. Find his income.,"₹5,800","₹6,000","₹6,200","₹6,500","₹6,000"
+39,Percentages,Diagnostic,Level 2,The price of an article decreases from ₹500 to ₹400. Find % decrease.,15%,18%,20%,25%,20%
+40,Percentages,Diagnostic,Level 2,"A man’s salary was increased from ₹20,000 to ₹22,000. Find the % increase.",8%,9%,10%,11%,10%
+41,Percentages,Adaptive,Level 2,Successive discounts of 20% and 10% are equal to a single discount of?,28%,30%,32%,25%,28%
+42,Percentages,Adaptive,Level 2,A student scores 40% in the first exam and 60% in the second. Average % score?,48%,50%,52%,54%,50%
+43,Percentages,Adaptive,Level 2,An item is sold for ₹880 after a 20% discount. Find its marked price.,"₹1,000","₹1,050","₹1,100","₹1,200","₹1,100"
+44,Percentages,Adaptive,Level 2,The price of wheat rises by 20%. By what % should consumption be reduced to keep expenditure constant?,16.66%,15%,18%,14%,16.66%
+45,Percentages,Adaptive,Level 2,"The population of a village is 8,000. It increases by 5% each year. What will it be after 2 years?","8,400","8,820","8,600","8,900","8,820"
+46,Percentages,Adaptive,Level 2,A price is increased by 25% and then by 10%. Overall % increase?,35%,37.50%,36%,34%,37.50%
+47,Percentages,Adaptive,Level 2,"An article costs ₹500. If its price is increased by 10% and then decreased by 10%, find the net % change.",0%,-1%,-2%,-3%,-1%
+48,Percentages,Adaptive,Level 2,"A man gives 25% of his salary to rent and 30% to food. If rent is ₹5,000, find his salary.","₹18,000","₹20,000","₹21,000","₹22,000","₹20,000"
+49,Percentages,Adaptive,Level 2,A number is first increased by 50% and then decreased by 50%. Net change?,0%,-25%,-20%,-30%,-25%
+50,Percentages,Adaptive,Level 2,"If 40% of A = 60% of B, find A : B.",2:3,3:2,4:5,5:4,3:2
+51,Percentages,Adaptive,Level 2,A price is reduced by 10% and then increased by 10%. Find net % change.,0%,1%,-1%,2%,-1%
+52,Percentages,Adaptive,Level 2,The cost price of an item is ₹400. It is sold at a profit of 20% after a discount of 10% on the marked price. Find MP.,₹500,₹520,₹540,₹550,₹500
+53,Percentages,Adaptive,Level 2,The price of petrol rises by 25%. By how much % should a person reduce consumption to keep the cost same?,20%,18%,25%,15%,20%
+54,Percentages,Adaptive,Level 2,An amount is increased by 10% and then again by 10%. Net % increase?,20%,21%,22%,23%,21%
+55,Percentages,Adaptive,Level 2,"A person spends 75% of his income. If his income is ₹40,000, find his savings.","₹8,000","₹9,000","₹10,000","₹12,000","₹10,000"
+56,Percentages,Adaptive,Level 2,Successive discounts of 15% and 5% are equal to a single discount of?,19%,18.25%,18%,17%,18.25%
+57,Percentages,Adaptive,Level 2,A shopkeeper offers 10% discount but cheats by giving 10% less quantity. His profit % is?,1%,2%,0%,3%,0%
+58,Percentages,Adaptive,Level 2,Price increases from ₹800 to ₹880. Find % increase.,8%,9%,10%,11%,10%
+59,Percentages,Adaptive,Level 2,"An item is sold for ₹1,260 after a 30% discount. Find its marked price.","₹1,600","₹1,700","₹1,800","₹1,900","₹1,800"
+60,Percentages,Adaptive,Level 2,"The cost price of an article is ₹500. After successive discounts of 20% and 10%, selling price is?",₹360,₹370,₹380,₹400,₹360

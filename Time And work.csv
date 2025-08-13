@@ -1,0 +1,61 @@
+QuestionID,subtopic,type,difficulty,question_text,OptionA,OptionB,OptionC,OptionD,Correct_Option
+1,Time and Work,Diagnostic,Speed Test,A can finish a work in 10 days. How much work does he finish in 1 day?,1/8,1/9,1/10,1/12,1/10
+2,Time and Work,Diagnostic,Speed Test,"If B can do a work in 8 days, what fraction is done in 3 days?",3/8,3/9,3/10,3/12,3/8
+3,Time and Work,Adaptive,Speed Test,"If C completes a job in 5 days, how much of the job is done in 2 days?",2/5,1/2,3/5,2/7,2/5
+4,Time and Work,Adaptive,Speed Test,A can finish a task in 6 days. How many days for 50% of the task?,2,3,4,5,3
+5,Time and Work,Adaptive,Speed Test,"If D can do a work in 12 days, work done in 4 days is?",1/2,1/3,1/4,1/5,1/3
+6,Time and Work,Adaptive,Speed Test,A can do a work in 15 days. How many days to do 2/5 of the work?,4,5,6,7,6
+7,Time and Work,Adaptive,Speed Test,"If a worker does 25% of a job in 5 days, in how many days will he finish it?",15,18,20,22,20
+8,Time and Work,Adaptive,Speed Test,A can finish a work in 4 days. His 1 day work is?,1/2,1/3,1/4,1/5,1/4
+9,Time and Work,Adaptive,Speed Test,"If a team does 40% in 4 days, how many more days to complete?",5,6,7,8,6
+10,Time and Work,Adaptive,Speed Test,B can do a work in 8 days. A in 12 days. Together in 1 day they can do?,5/24,4/15,1/6,7/24,5/24
+11,Time and Work,Diagnostic,Level 1,"A can do a work in 20 days, B in 30 days. In how many days together?",12,15,10,18,12
+12,Time and Work,Diagnostic,Level 1,C can complete a job in 15 days. D takes 20 days. Together in 1 day they do?,7/60,1/5,2/9,8/45,7/60
+13,Time and Work,Diagnostic,Level 1,"If A completes 1/4 of work in 5 days, total days to complete?",15,18,20,25,20
+14,Time and Work,Diagnostic,Level 1,B alone can do work in 12 days. How much in 5 days?,5/12,5/15,5/10,5/8,5/12
+15,Time and Work,Diagnostic,Level 1,"A can do work in 10 days, B in 15 days. A works 2 days, B works 3 days. Left?",1/3,1/4,1/5,1/6,1/3
+16,Time and Work,Adaptive,Level 1,"Two workers can finish in 8 days. If one quits after 3 days, how long for rest?",6,7,8,9,7
+17,Time and Work,Adaptive,Level 1,A can do work in 15 days. B is 50% as efficient. Together in days?,10,12,14,15,10
+18,Time and Work,Adaptive,Level 1,"C can complete job in 18 days, D in 12 days. Together?",7.2,7.5,8,8.5,7.2
+19,Time and Work,Adaptive,Level 1,"If 3 men can do in 12 days, 6 men will do in?",4,5,6,7,6
+20,Time and Work,Adaptive,Level 1,A and B finish work in 10 days. B alone takes 15 days. A alone?,30,20,25,15,30
+21,Time and Work,Adaptive,Level 1,"A completes in 10 days. B helps 2 days, then A alone. Total days?",8,9,10,11,9
+22,Time and Work,Adaptive,Level 1,"C completes in 30 days. Works 5 days, remainder by D in 20 days. D alone?",40,45,50,55,40
+23,Time and Work,Adaptive,Level 1,A does twice work of B. Together in 12 days. A alone?,18,20,22,24,18
+24,Time and Work,Adaptive,Level 1,"If 4 men take 15 days, 5 men take?",10,11,12,13,12
+25,Time and Work,Adaptive,Level 1,"A works 6 hrs/day, completes in 10 days. If works 8 hrs/day, days needed?",7.5,8,8.5,9,7.5
+26,Time and Work,Adaptive,Level 1,"B can do in 25 days. After 5 days, A joins and they finish in 10 more. A alone?",20,25,30,35,20
+27,Time and Work,Adaptive,Level 1,"A finishes in 18 days, B in 24 days. Together?",10.28,10.29,10.3,10.5,10.29
+28,Time and Work,Adaptive,Level 1,"If a machine makes 40 parts in 5 hrs, 100 parts in?",12,12.5,13,14,12.5
+29,Time and Work,Adaptive,Level 1,"A completes in 15 days. Works alone 5 days, B joins, together 5 more days. Left?",1/3,1/4,1/5,1/6,1/3
+30,Time and Work,Adaptive,Level 1,A works twice as fast as B. Together finish in 8 days. B alone?,24,16,20,18,24
+31,Time and Work,Adaptive,Level 1,5 workers do in 20 days. 8 workers will do in?,12.5,12,11,10,12.5
+32,Time and Work,Adaptive,Level 1,"C can do in 16 days. Works 4 days, then D finishes in 6 days. D alone?",24,20,18,16,24
+33,Time and Work,Adaptive,Level 1,"If a pump fills a tank in 10 hrs, how much in 4 hrs?",2/5,1/2,3/5,4/5,2/5
+34,Time and Work,Adaptive,Level 1,"A completes in 30 days, B in 15 days. Together?",10,8,12,9,10
+35,Time and Work,Adaptive,Level 1,"A works 5 hrs/day, finishes in 12 days. If works 8 hrs/day, days?",7.5,8,9,10,7.5
+36,Time and Work,Diagnostic,Level 2,"A, B, C together can do in 6 days. A alone 12 days, B alone 15 days. C alone?",20,18,15,12,20
+37,Time and Work,Diagnostic,Level 2,A and B can do in 8 days. B and C in 12 days. A and C in 16 days. All together?,10,8,6,12,6
+38,Time and Work,Diagnostic,Level 2,A can do 30% more than B. Together finish in 13 days. B alone?,20,18,22,24,20
+39,Time and Work,Diagnostic,Level 2,A finishes 1.5 times as fast as B. Together in 10 days. B alone?,25,30,35,40,25
+40,Time and Work,Diagnostic,Level 2,A can do in 10 days. B helps alternate days. Work completed in?,12,13,14,15,13
+41,Time and Work,Adaptive,Level 2,"A, B, C together in 8 days. A alone 16 days, B alone 24 days. C alone?",48,40,36,30,48
+42,Time and Work,Adaptive,Level 2,"A and B do in 12 days. B works twice as fast. Alone, A will take?",36,24,18,16,36
+43,Time and Work,Adaptive,Level 2,"If 8 men take 12 days, 6 men take?",16,14,18,15,16
+44,Time and Work,Adaptive,Level 2,"A, B together finish in 15 days. A works 5 days, then B finishes in 30 days.",45,50,55,60,45
+45,Time and Work,Adaptive,Level 2,C is 25% faster than D. Together in 12 days. D alone?,20,22,24,25,20
+46,Time and Work,Adaptive,Level 2,A works thrice as fast as B. Together finish in 8 days. A alone?,10.67,12,14,16,10.67
+47,Time and Work,Adaptive,Level 2,"A and B can do in 10 days, B alone in 20. A alone?",20,15,10,25,20
+48,Time and Work,Adaptive,Level 2,"A and B finish work in 24 days. A works 4 days, B finishes in 20 days. A alone?",40,45,50,60,40
+49,Time and Work,Adaptive,Level 2,4 men do in 15 days. How many for 5 days?,12,10,8,15,12
+50,Time and Work,Adaptive,Level 2,"A, B, C complete in 4 days. A alone 12 days, B alone 6 days. C alone?",8,10,12,14,8
+51,Time and Work,Adaptive,Level 2,Two pumps fill in 6 hrs. One takes 8 hrs. Other alone?,12,14,16,18,12
+52,Time and Work,Adaptive,Level 2,"A can do in 18 days, B in 24. They work 8 days together, left?",1/3,1/4,1/5,1/6,1/3
+53,Time and Work,Adaptive,Level 2,A works half as fast as B. Together in 12 days. B alone?,18,16,14,12,18
+54,Time and Work,Adaptive,Level 2,"A, B together in 40 days. A leaves after 10 days. B finishes in 100 days total.",60,70,80,90,60
+55,Time and Work,Adaptive,Level 2,"C completes in 50 days. Works 20 days, then D finishes in 30. D alone?",75,60,50,45,75
+56,Time and Work,Adaptive,Level 2,A completes 1/5 of work in 4 days. Total days?,18,20,22,24,20
+57,Time and Work,Adaptive,Level 2,A works twice as fast as B. Together 12 days. A alone?,18,16,15,14,18
+58,Time and Work,Adaptive,Level 2,"A alone in 36 days, B alone in 24 days. Together?",14.4,15,16,18,14.4
+59,Time and Work,Adaptive,Level 2,"If 10 workers do in 15 days, how many for 5 days?",30,28,25,32,30
+60,Time and Work,Adaptive,Level 2,"A completes in 45 days, works 15 days, B finishes in 30. B alone?",90,80,70,60,90

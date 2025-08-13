@@ -1,0 +1,201 @@
+StudentID,Topic,Diagnostic_Score(%),Diagnostic_Time(sec),Feedback_Difficulty,Recommended_Path
+S001,Time and Work,68,314,Speed Test,Speed Test → Level 1
+S002,Percentages,59,332,Speed Test,Speed Test → Level 1
+S003,Time and Work,38,339,Speed Test,Speed Test → Level 1
+S004,"Time, Speed and Distance",51,436,Level 2,Level 2 → Level 1 → Speed Test
+S005,"Time, Speed and Distance",66,247,Level 2,Level 2 → Speed Test
+S006,Time and Work,95,452,Level 1,Level 1 → Level 2 → Speed Test
+S007,Time and Work,62,572,Level 2,Level 2 → Speed Test
+S008,"Time, Speed and Distance",86,593,Level 2,Level 2 → Speed Test
+S009,Percentages,34,333,Level 1,Level 1 → Speed Test → Level 2
+S010,"Time, Speed and Distance",42,213,Level 1,Level 1 → Speed Test → Level 2
+S011,"Time, Speed and Distance",86,597,Speed Test,Speed Test → Level 1 → Level 2
+S012,Percentages,71,494,Level 2,Level 2 → Level 1 → Speed Test
+S013,Percentages,92,592,Level 2,Level 2 → Speed Test
+S014,Percentages,54,440,Level 1,Level 1 → Speed Test → Level 2
+S015,"Time, Speed and Distance",96,378,Level 1,Level 1 → Speed Test → Level 2
+S016,Time and Work,64,416,Level 2,Level 2 → Level 1 → Speed Test
+S017,"Time, Speed and Distance",65,389,Level 2,Level 2 → Speed Test
+S018,Time and Work,67,384,Level 1,Level 1 → Speed Test → Level 2
+S019,"Time, Speed and Distance",49,502,Level 1,Level 1 → Level 1 Retry → Speed Test
+S020,Time and Work,47,308,Level 2,Level 2 → Speed Test → Level 1
+S021,"Time, Speed and Distance",30,507,Speed Test,Speed Test → Level 1
+S022,Percentages,100,492,Speed Test,Speed Test → Level 1 → Level 2
+S023,Percentages,63,317,Level 1,Level 1 → Level 1 Retry → Speed Test
+S024,Time and Work,58,343,Level 2,Level 2 → Speed Test
+S025,Percentages,37,204,Speed Test,Speed Test → Level 1
+S026,Percentages,57,328,Level 1,Level 1 → Level 2 → Speed Test
+S027,"Time, Speed and Distance",31,525,Level 1,Level 1 → Speed Test → Level 2
+S028,"Time, Speed and Distance",37,555,Level 2,Level 2 → Level 1 → Speed Test
+S029,"Time, Speed and Distance",98,383,Level 1,Level 1 → Level 2 → Speed Test
+S030,Time and Work,91,289,Level 2,Level 2 → Level 1 → Speed Test
+S031,Time and Work,78,211,Level 1,Level 1 → Level 2 → Speed Test
+S032,Time and Work,45,571,Level 1,Level 1 → Level 1 Retry → Speed Test
+S033,Time and Work,100,310,Level 1,Level 1 → Level 2 → Speed Test
+S034,Time and Work,95,209,Speed Test,Speed Test → Level 1 → Level 2
+S035,"Time, Speed and Distance",56,565,Level 2,Level 2 → Level 1 → Speed Test
+S036,"Time, Speed and Distance",37,229,Level 1,Level 1 → Level 2 → Speed Test
+S037,Percentages,57,275,Speed Test,Speed Test → Level 1
+S038,Time and Work,95,200,Level 2,Level 2 → Level 1 → Speed Test
+S039,"Time, Speed and Distance",60,506,Level 1,Level 1 → Level 2 → Speed Test
+S040,"Time, Speed and Distance",46,380,Level 2,Level 2 → Speed Test
+S041,"Time, Speed and Distance",53,276,Level 1,Level 1 → Level 1 Retry → Speed Test
+S042,Percentages,49,591,Speed Test,Speed Test → Level 2
+S043,Time and Work,43,547,Level 1,Level 1 → Speed Test → Level 2
+S044,"Time, Speed and Distance",71,535,Level 2,Level 2 → Speed Test
+S045,"Time, Speed and Distance",91,402,Level 1,Level 1 → Speed Test → Level 2
+S046,Time and Work,80,208,Level 2,Level 2 → Speed Test → Level 1
+S047,Time and Work,71,500,Speed Test,Speed Test → Level 1 → Level 2
+S048,"Time, Speed and Distance",79,274,Level 2,Level 2 → Speed Test → Level 1
+S049,Time and Work,69,251,Level 1,Level 1 → Speed Test → Level 2
+S050,Time and Work,90,498,Level 1,Level 1 → Level 1 Retry → Speed Test
+S051,Percentages,88,291,Level 2,Level 2 → Speed Test
+S052,Time and Work,31,409,Level 1,Level 1 → Level 2 → Speed Test
+S053,Percentages,78,262,Level 2,Level 2 → Level 1 → Speed Test
+S054,"Time, Speed and Distance",96,276,Level 2,Level 2 → Speed Test
+S055,Time and Work,33,300,Level 1,Level 1 → Level 1 Retry → Speed Test
+S056,Percentages,87,443,Level 2,Level 2 → Speed Test → Level 1
+S057,"Time, Speed and Distance",33,467,Level 1,Level 1 → Level 1 Retry → Speed Test
+S058,Time and Work,87,386,Speed Test,Speed Test → Level 2
+S059,Time and Work,31,224,Level 2,Level 2 → Speed Test
+S060,"Time, Speed and Distance",40,435,Level 1,Level 1 → Speed Test → Level 2
+S061,"Time, Speed and Distance",83,574,Speed Test,Speed Test → Level 1 → Level 2
+S062,Time and Work,56,339,Level 2,Level 2 → Level 1 → Speed Test
+S063,Percentages,62,546,Speed Test,Speed Test → Level 2
+S064,Time and Work,48,469,Level 1,Level 1 → Level 1 Retry → Speed Test
+S065,Percentages,70,590,Level 1,Level 1 → Level 2 → Speed Test
+S066,Time and Work,100,461,Level 1,Level 1 → Speed Test → Level 2
+S067,"Time, Speed and Distance",56,272,Speed Test,Speed Test → Level 2
+S068,"Time, Speed and Distance",85,578,Level 1,Level 1 → Speed Test → Level 2
+S069,Percentages,78,526,Speed Test,Speed Test → Level 1 → Level 2
+S070,Time and Work,69,467,Level 2,Level 2 → Level 1 → Speed Test
+S071,Percentages,73,350,Level 1,Level 1 → Speed Test → Level 2
+S072,"Time, Speed and Distance",37,527,Speed Test,Speed Test → Level 1
+S073,Percentages,85,587,Level 2,Level 2 → Speed Test → Level 1
+S074,Percentages,43,573,Level 2,Level 2 → Speed Test → Level 1
+S075,Percentages,86,482,Level 1,Level 1 → Level 2 → Speed Test
+S076,Time and Work,47,403,Level 2,Level 2 → Speed Test
+S077,Percentages,80,315,Speed Test,Speed Test → Level 2
+S078,Percentages,64,517,Speed Test,Speed Test → Level 2
+S079,Time and Work,76,280,Level 2,Level 2 → Speed Test → Level 1
+S080,"Time, Speed and Distance",38,207,Level 2,Level 2 → Speed Test
+S081,Time and Work,60,502,Speed Test,Speed Test → Level 1
+S082,Percentages,80,413,Speed Test,Speed Test → Level 1 → Level 2
+S083,"Time, Speed and Distance",32,252,Level 2,Level 2 → Speed Test → Level 1
+S084,Time and Work,45,311,Level 1,Level 1 → Speed Test → Level 2
+S085,"Time, Speed and Distance",73,301,Speed Test,Speed Test → Level 1
+S086,Percentages,46,532,Speed Test,Speed Test → Level 1
+S087,Percentages,54,224,Level 2,Level 2 → Speed Test
+S088,Percentages,95,318,Level 1,Level 1 → Speed Test → Level 2
+S089,Time and Work,49,435,Speed Test,Speed Test → Level 1 → Level 2
+S090,"Time, Speed and Distance",51,569,Speed Test,Speed Test → Level 1 → Level 2
+S091,Time and Work,96,388,Level 2,Level 2 → Speed Test → Level 1
+S092,"Time, Speed and Distance",60,337,Level 2,Level 2 → Speed Test → Level 1
+S093,Percentages,91,322,Level 1,Level 1 → Speed Test → Level 2
+S094,Time and Work,84,301,Level 2,Level 2 → Speed Test
+S095,Time and Work,45,333,Level 2,Level 2 → Level 1 → Speed Test
+S096,Time and Work,38,529,Level 1,Level 1 → Level 2 → Speed Test
+S097,Percentages,35,465,Speed Test,Speed Test → Level 1
+S098,"Time, Speed and Distance",89,520,Level 1,Level 1 → Speed Test → Level 2
+S099,Percentages,100,278,Level 1,Level 1 → Level 1 Retry → Speed Test
+S100,"Time, Speed and Distance",46,265,Level 1,Level 1 → Level 2 → Speed Test
+S101,Time and Work,44,514,Level 2,Level 2 → Speed Test → Level 1
+S102,Time and Work,87,200,Level 1,Level 1 → Speed Test → Level 2
+S103,Percentages,63,380,Speed Test,Speed Test → Level 1
+S104,"Time, Speed and Distance",42,375,Speed Test,Speed Test → Level 1
+S105,"Time, Speed and Distance",66,316,Level 2,Level 2 → Level 1 → Speed Test
+S106,Time and Work,65,373,Level 2,Level 2 → Speed Test
+S107,Percentages,33,409,Level 2,Level 2 → Speed Test
+S108,Percentages,41,590,Speed Test,Speed Test → Level 1 → Level 2
+S109,Percentages,52,219,Level 1,Level 1 → Level 2 → Speed Test
+S110,Percentages,66,512,Level 1,Level 1 → Level 2 → Speed Test
+S111,"Time, Speed and Distance",31,277,Level 1,Level 1 → Level 2 → Speed Test
+S112,Percentages,75,552,Level 2,Level 2 → Level 1 → Speed Test
+S113,"Time, Speed and Distance",73,313,Speed Test,Speed Test → Level 1
+S114,Time and Work,31,532,Level 1,Level 1 → Level 1 Retry → Speed Test
+S115,"Time, Speed and Distance",62,562,Speed Test,Speed Test → Level 1 → Level 2
+S116,Time and Work,60,577,Speed Test,Speed Test → Level 1 → Level 2
+S117,Time and Work,73,226,Speed Test,Speed Test → Level 1
+S118,Time and Work,70,311,Level 2,Level 2 → Speed Test
+S119,Percentages,52,216,Speed Test,Speed Test → Level 2
+S120,"Time, Speed and Distance",39,317,Level 2,Level 2 → Speed Test → Level 1
+S121,Percentages,33,519,Speed Test,Speed Test → Level 1 → Level 2
+S122,Percentages,63,445,Level 2,Level 2 → Speed Test → Level 1
+S123,"Time, Speed and Distance",92,580,Speed Test,Speed Test → Level 2
+S124,Percentages,72,495,Level 1,Level 1 → Speed Test → Level 2
+S125,"Time, Speed and Distance",53,246,Speed Test,Speed Test → Level 2
+S126,Percentages,97,352,Level 1,Level 1 → Level 1 Retry → Speed Test
+S127,"Time, Speed and Distance",76,555,Level 1,Level 1 → Level 2 → Speed Test
+S128,Percentages,32,318,Speed Test,Speed Test → Level 1 → Level 2
+S129,Percentages,85,450,Speed Test,Speed Test → Level 1
+S130,Percentages,32,370,Level 1,Level 1 → Level 1 Retry → Speed Test
+S131,Percentages,46,209,Level 1,Level 1 → Level 2 → Speed Test
+S132,Percentages,72,482,Level 1,Level 1 → Level 1 Retry → Speed Test
+S133,"Time, Speed and Distance",69,294,Level 1,Level 1 → Level 1 Retry → Speed Test
+S134,"Time, Speed and Distance",77,455,Level 2,Level 2 → Level 1 → Speed Test
+S135,"Time, Speed and Distance",44,369,Level 1,Level 1 → Level 2 → Speed Test
+S136,Time and Work,34,372,Speed Test,Speed Test → Level 1 → Level 2
+S137,Time and Work,55,588,Level 2,Level 2 → Level 1 → Speed Test
+S138,"Time, Speed and Distance",36,411,Level 2,Level 2 → Speed Test
+S139,"Time, Speed and Distance",56,484,Level 1,Level 1 → Speed Test → Level 2
+S140,Percentages,66,469,Level 2,Level 2 → Speed Test
+S141,Percentages,75,485,Level 1,Level 1 → Level 2 → Speed Test
+S142,Time and Work,78,210,Level 1,Level 1 → Speed Test → Level 2
+S143,"Time, Speed and Distance",80,276,Level 1,Level 1 → Level 2 → Speed Test
+S144,Percentages,49,376,Speed Test,Speed Test → Level 1 → Level 2
+S145,Time and Work,65,416,Level 2,Level 2 → Level 1 → Speed Test
+S146,"Time, Speed and Distance",100,560,Level 1,Level 1 → Level 2 → Speed Test
+S147,"Time, Speed and Distance",74,462,Speed Test,Speed Test → Level 2
+S148,Time and Work,61,397,Level 1,Level 1 → Level 1 Retry → Speed Test
+S149,Percentages,59,235,Level 1,Level 1 → Level 1 Retry → Speed Test
+S150,"Time, Speed and Distance",98,474,Level 2,Level 2 → Speed Test
+S151,Time and Work,79,451,Level 2,Level 2 → Speed Test
+S152,"Time, Speed and Distance",44,461,Level 2,Level 2 → Speed Test
+S153,Time and Work,82,304,Level 1,Level 1 → Level 1 Retry → Speed Test
+S154,"Time, Speed and Distance",41,200,Level 2,Level 2 → Speed Test → Level 1
+S155,Time and Work,66,214,Level 2,Level 2 → Level 1 → Speed Test
+S156,"Time, Speed and Distance",33,460,Level 1,Level 1 → Level 1 Retry → Speed Test
+S157,Percentages,98,292,Speed Test,Speed Test → Level 1 → Level 2
+S158,Percentages,48,390,Level 1,Level 1 → Level 1 Retry → Speed Test
+S159,Time and Work,93,374,Speed Test,Speed Test → Level 2
+S160,"Time, Speed and Distance",49,332,Level 2,Level 2 → Speed Test → Level 1
+S161,Percentages,56,229,Level 2,Level 2 → Speed Test
+S162,Percentages,91,583,Level 1,Level 1 → Level 2 → Speed Test
+S163,Time and Work,55,287,Level 2,Level 2 → Speed Test → Level 1
+S164,Percentages,35,389,Level 2,Level 2 → Speed Test → Level 1
+S165,"Time, Speed and Distance",42,520,Speed Test,Speed Test → Level 1 → Level 2
+S166,"Time, Speed and Distance",32,594,Level 1,Level 1 → Level 2 → Speed Test
+S167,Time and Work,47,298,Level 2,Level 2 → Speed Test
+S168,Time and Work,82,460,Speed Test,Speed Test → Level 2
+S169,Time and Work,54,232,Level 2,Level 2 → Level 1 → Speed Test
+S170,Time and Work,95,477,Level 2,Level 2 → Speed Test
+S171,Percentages,88,497,Level 2,Level 2 → Speed Test
+S172,Percentages,39,435,Speed Test,Speed Test → Level 1 → Level 2
+S173,"Time, Speed and Distance",42,293,Level 1,Level 1 → Level 1 Retry → Speed Test
+S174,"Time, Speed and Distance",82,356,Level 1,Level 1 → Speed Test → Level 2
+S175,Percentages,48,391,Speed Test,Speed Test → Level 2
+S176,"Time, Speed and Distance",93,393,Level 2,Level 2 → Level 1 → Speed Test
+S177,Percentages,95,336,Level 2,Level 2 → Speed Test → Level 1
+S178,Percentages,50,594,Level 2,Level 2 → Speed Test → Level 1
+S179,"Time, Speed and Distance",37,327,Level 2,Level 2 → Level 1 → Speed Test
+S180,Time and Work,90,567,Level 1,Level 1 → Level 2 → Speed Test
+S181,Time and Work,53,306,Level 1,Level 1 → Speed Test → Level 2
+S182,"Time, Speed and Distance",30,348,Speed Test,Speed Test → Level 2
+S183,"Time, Speed and Distance",73,300,Speed Test,Speed Test → Level 2
+S184,Percentages,87,495,Level 2,Level 2 → Level 1 → Speed Test
+S185,"Time, Speed and Distance",96,341,Speed Test,Speed Test → Level 2
+S186,"Time, Speed and Distance",33,512,Level 2,Level 2 → Speed Test → Level 1
+S187,"Time, Speed and Distance",79,466,Level 1,Level 1 → Speed Test → Level 2
+S188,Percentages,82,433,Speed Test,Speed Test → Level 1 → Level 2
+S189,Time and Work,56,352,Speed Test,Speed Test → Level 1
+S190,"Time, Speed and Distance",82,423,Level 1,Level 1 → Level 2 → Speed Test
+S191,"Time, Speed and Distance",81,379,Level 1,Level 1 → Speed Test → Level 2
+S192,Percentages,30,374,Level 2,Level 2 → Speed Test → Level 1
+S193,Time and Work,52,223,Level 1,Level 1 → Level 2 → Speed Test
+S194,Percentages,87,313,Level 2,Level 2 → Speed Test
+S195,Percentages,56,430,Level 2,Level 2 → Level 1 → Speed Test
+S196,"Time, Speed and Distance",84,523,Level 1,Level 1 → Level 1 Retry → Speed Test
+S197,Percentages,98,300,Level 1,Level 1 → Level 1 Retry → Speed Test
+S198,"Time, Speed and Distance",42,326,Level 2,Level 2 → Speed Test
+S199,"Time, Speed and Distance",67,483,Level 1,Level 1 → Speed Test → Level 2
+S200,Time and Work,97,504,Level 2,Level 2 → Speed Test
