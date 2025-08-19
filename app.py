@@ -1,106 +1,97 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import time
+import os
 
-# -------------------
-# 1. Load assets
-# -------------------
-# Load datasets (replace with your repo paths or raw GitHub links)
-datasets = {
-    "Time & Work": "Time And work.csv",
-    "Percentages": "Percentages.csv",
-    "Time Speed Distance": "Time Speed Distance.csv"
-}
+# Load recommendation model (already trained and saved in repo)
+@st.cache_resource
+def load_model():
+    return joblib.load("best_rf_model.pkl")
 
-# Load recommendation model + encoders
-model = joblib.load("best_rf_model.pkl")
-feature_encoders = joblib.load("feature_encoders.pkl")
-target_encoder = joblib.load("target_encoder.pkl")
+# Helper: Load subject dataset
+def load_subject_data(subject):
+    file_map = {
+        "Percentages": "Percentages.csv",
+        "Time and Work": "Time And work.csv",
+        "Time Speed Distance": "Time Speed Distance.csv"
+    }
+    return pd.read_csv(file_map[subject])
 
-# -------------------
-# 2. App layout
-# -------------------
-st.title("📚 Drona AI - Student Diagnostic Test")
+# Streamlit UI
+st.title("📚 Student Diagnostic App")
 
-# Student info
-student_name = st.text_input("Enter your name")
-subject = st.selectbox("Choose a subject", list(datasets.keys()))
+# Sidebar: choose subject
+subject = st.sidebar.selectbox("Choose a subject", ["Percentages", "Time and Work", "Time Speed Distance"])
 
-# -------------------
-# 3. Diagnostic Quiz
-# -------------------
-if subject:
-    df = pd.read_csv(datasets[subject])
+# Load dataset for chosen subject
+df = load_subject_data(subject)
 
-    # filter only diagnostic questions
-    diagnostic_df = df[df["Question Type"] == "diagnostic"].head(10)  
+# Select 10 diagnostic questions
+diagnostic_df = df[df["type"].str.lower() == "diagnostic"].head(10)
 
-    st.subheader(f"Diagnostic Quiz - {subject}")
+# Storage for quiz answers
+if "responses" not in st.session_state:
+    st.session_state.responses = []
+if "score" not in st.session_state:
+    st.session_state.score = 0
+if "quiz_complete" not in st.session_state:
+    st.session_state.quiz_complete = False
 
-    student_answers = {}
-    start_time = time.time()
+# Quiz Flow
+st.header(f"Diagnostic Quiz - {subject}")
 
-    with st.form("quiz_form"):
-        for i, row in diagnostic_df.iterrows():
-            st.write(f"**Q{i+1}: {row['Question']}**")
-            options = [row['Option1'], row['Option2'], row['Option3'], row['Option4']]
-            answer = st.radio("Select answer:", options, key=f"q{i}")
-            student_answers[i] = answer
+for idx, row in diagnostic_df.iterrows():
+    question = row["question_text"]
+    options = [row["OptionA"], row["OptionB"], row["OptionC"], row["OptionD"]]
+    correct = row["Correct_Option"]
 
-        submitted = st.form_submit_button("Submit Answers")
+    choice = st.radio(f"Q{row['QuestionID']}: {question}", options, key=f"q_{row['QuestionID']}")
 
-    # -------------------
-    # 4. Results + Feedback
-    # -------------------
-    if submitted:
-        end_time = time.time()
-        time_taken = round(end_time - start_time, 2)
+    if st.button(f"Submit Q{row['QuestionID']}", key=f"submit_{row['QuestionID']}"):
+        st.session_state.responses.append({
+            "QuestionID": row["QuestionID"],
+            "question": question,
+            "selected": choice,
+            "correct": correct,
+            "is_correct": (choice[0] == correct)  # compare option label A/B/C/D
+        })
+        if choice[0] == correct:
+            st.session_state.score += 1
 
-        score = 0
-        correct, incorrect = [], []
+# After quiz submission
+if st.button("Finish Quiz"):
+    st.session_state.quiz_complete = True
 
-        for i, row in diagnostic_df.iterrows():
-            correct_ans = row['Correct Answer']
-            if student_answers[i] == correct_ans:
-                score += 1
-                correct.append(row['Question'])
-            else:
-                incorrect.append(row['Question'])
+if st.session_state.quiz_complete:
+    st.subheader("✅ Quiz Completed!")
+    st.write(f"Score: {st.session_state.score} / {len(diagnostic_df)}")
 
-        st.success(f"✅ You scored {score} / {len(diagnostic_df)}")
-        st.write("Correct Answers:", correct)
-        st.write("Incorrect Answers:", incorrect)
-        st.write(f"⏱ Time Taken: {time_taken} seconds")
+    # Show correct vs incorrect
+    for r in st.session_state.responses:
+        st.write(
+            f"Q{r['QuestionID']}: {r['question']} | "
+            f"Your Answer: {r['selected']} | Correct: {r['correct']} | "
+            f"{'✅ Correct' if r['is_correct'] else '❌ Wrong'}"
+        )
 
-        # Feedback
-        feedback = st.text_area("Give feedback on the test")
+    # Feedback
+    feedback = st.radio("How did you find the quiz?", ["Easy", "Okay", "Difficult"])
+    time_taken = st.number_input("Time taken (minutes)", min_value=1, step=1)
+    attempt = 1  # for now always 1st attempt
 
-        # -------------------
-        # 5. Store attempt data
-        # -------------------
-        attempt_data = {
-            "Name": student_name,
-            "Subject": subject,
-            "Score": score,
-            "TimeTaken": time_taken,
-            "Feedback": feedback,
-            "Attempt": 1
-        }
-        st.session_state["attempt_data"] = attempt_data  
+    # Save for recommendation
+    student_data = pd.DataFrame([{
+        "subject": subject,
+        "score": st.session_state.score,
+        "feedback": feedback,
+        "time_taken": time_taken,
+        "attempt": attempt
+    }])
 
-        # -------------------
-        # 6. Recommendation
-        # -------------------
-        if st.button("Get Recommendation"):
-            df_student = pd.DataFrame([attempt_data])
+    # Load model
+    model = load_model()
 
-            # Encode features like in your notebook
-            for col, le in feature_encoders.items():
-                if col in df_student:
-                    df_student[col] = le.transform(df_student[col])
-
-            y_pred = model.predict(df_student)
-            recommendation = target_encoder.inverse_transform(y_pred)[0]
-
-            st.info(f"📌 Recommendation: {recommendation}")
+    # Encode + predict
+    recommendation = model.predict(student_data)[0]
+    st.subheader("🎯 Recommendation")
+    st.write(recommendation)
