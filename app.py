@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 from streamlit_gsheets import GSheetsConnection
 
 # --- Google Sheets Configuration ---
-# You need to replace 'your_sheet_id' with your Google Sheet ID
-SHEET_URL = f"https://docs.google.com/spreadsheets/d/{st.secrets['gcp_sheet_id']}/edit?usp=sharing"
+# You need to ensure the `gcp_sheet_id` is set in your Streamlit Cloud secrets.
+SHEET_URL = f"https://docs.google.com/spreadsheets/d/{st.secrets.gcp_sheet_id}/edit?usp=sharing"
 
 # --- Configuration & Data Loading ---
 CSV_LINKS = {
@@ -74,7 +74,7 @@ best_rf_model, label_encoders, target_encoder, feature_order = get_trained_model
 def get_logged_in_users():
     """Reads student data from the Google Sheet."""
     conn = st.connection("gsheets", type=GSheetsConnection)
-    df = conn.read(spreadsheet=st.secrets['gcp_sheet_id'], usecols=list(range(6)), ttl=5)
+    df = conn.read(spreadsheet=st.secrets.gcp_sheet_id, usecols=list(range(6)), ttl=5)
     df.columns = ["student_name", "dob", "topic", "score", "time_taken", "recommended_path"]
     df.dropna(how="all", inplace=True)
     return df
@@ -90,7 +90,7 @@ def save_student_data(student_name, dob, topic, score, time_taken, recommended_p
         "time_taken": time_taken,
         "recommended_path": recommended_path,
     }])
-    conn.append(spreadsheet=st.secrets['gcp_sheet_id'], data=new_data)
+    conn.append(spreadsheet=st.secrets.gcp_sheet_id, data=new_data)
     st.info("Your results have been saved!")
 
 def get_diagnostic_questions(topic_name):
