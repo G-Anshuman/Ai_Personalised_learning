@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 import pickle
 import joblib
 import os
+import matplotlib.pyplot as plt
 
 # --- Configuration & Data Loading ---
 CSV_LINKS = {
@@ -211,6 +212,22 @@ def show_main_app_flow():
         st.markdown(f"📊 **Score:** {score}/{total_marks} marks")
         st.markdown(f"📝 **Total Questions:** {len(questions)}")
         st.markdown(f"⏳ **Time Taken:** {total_time} seconds")
+        
+        # Add a bar chart for results
+        correct_count = len(questions) - len(wrong_answers)
+        incorrect_count = len(wrong_answers)
+
+        result_df = pd.DataFrame({
+            'Category': ['Correct', 'Incorrect'],
+            'Count': [correct_count, incorrect_count]
+        })
+
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.bar(result_df['Category'], result_df['Count'], color=['green', 'red'])
+        ax.set_title('Test Performance Summary')
+        ax.set_xlabel('Question Status')
+        ax.set_ylabel('Number of Questions')
+        st.pyplot(fig)
         
         if wrong_answers:
             st.subheader("❌ Incorrect Answers:")
