@@ -4,5 +4,6 @@ numpy
 scikit-learn==1.6.1
 joblib
 matplotlib
-streamlit_gsheets
+st-gsheets-connection
+
 
