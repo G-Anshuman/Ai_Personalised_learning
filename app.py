@@ -160,6 +160,7 @@ def show_student_dashboard(student_data):
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Choose a New Topic"):
+            # Reset state for a new test
             st.session_state.test_started = False
             st.session_state.test_submitted = False
             st.session_state.current_question_index = 0
@@ -168,6 +169,7 @@ def show_student_dashboard(student_data):
             st.rerun()
     with col2:
         if st.button("Re-take this Topic"):
+            # Prepare state to start a new diagnostic test on the same topic
             st.session_state.test_started = True
             st.session_state.test_submitted = False
             st.session_state.current_question_index = 0
@@ -178,16 +180,25 @@ def show_student_dashboard(student_data):
             st.rerun()
 
 def show_main_app_flow():
-    if 'is_returning_user' not in st.session_state:
-        st.session_state.is_returning_user = None
+    # Initialize all necessary session state variables
+    if 'student_name' not in st.session_state: st.session_state.student_name = None
+    if 'student_dob' not in st.session_state: st.session_state.student_dob = None
+    if 'is_returning_user' not in st.session_state: st.session_state.is_returning_user = None
+    if 'test_started' not in st.session_state: st.session_state.test_started = False
+    if 'test_submitted' not in st.session_state: st.session_state.test_submitted = False
+    if 'current_question_index' not in st.session_state: st.session_state.current_question_index = 0
+    if 'answers' not in st.session_state: st.session_state.answers = []
+    if 'start_time' not in st.session_state: st.session_state.start_time = None
+    if 'diagnostic_questions' not in st.session_state: st.session_state.diagnostic_questions = []
 
-    if st.session_state.is_returning_user is None:
+    # --- Student Login and Profile Check ---
+    if st.session_state.student_name is None:
         st.title("Ready to Start?")
         col_name, col_dob = st.columns(2)
         with col_name:
-            student_name_input = st.text_input("Enter your name:")
+            student_name_input = st.text_input("Enter your name:", key='name_input')
         with col_dob:
-            student_dob_input = st.text_input("Enter your D.O.B. (YYYY-MM-DD):")
+            student_dob_input = st.text_input("Enter your D.O.B. (YYYY-MM-DD):", key='dob_input')
 
         if st.button("Log In"):
             if student_name_input and student_dob_input:
@@ -202,23 +213,23 @@ def show_main_app_flow():
                         st.session_state.is_returning_user = True
                         st.session_state.student_name = existing_student_data['student_name'].iloc[0]
                         st.session_state.student_data = existing_student_data
-                        st.rerun()
                     else:
                         st.session_state.is_returning_user = False
                         st.session_state.student_name = student_name_input
                         st.session_state.student_dob = student_dob_input
                         st.success(f"Welcome, {st.session_state.student_name}! 👋")
-                        st.rerun()
                 except Exception as e:
                     st.error(f"An error occurred: {e}. Please check your Google Sheets connection settings.")
             else:
                 st.warning("Please enter both your name and D.O.B.")
         return
 
+    # --- Returning user dashboard ---
     if st.session_state.is_returning_user:
         show_student_dashboard(st.session_state.student_data)
         return
 
+    # --- New user flow or re-attempt flow ---
     st.sidebar.info(f"Welcome, {st.session_state.student_name}!")
     st.subheader("Choose a topic:")
     topics_display = [t.replace('_', ' ').title() for t in list(CSV_LINKS.keys())[1:]]
