@@ -77,16 +77,6 @@ def get_diagnostic_questions(topic_name):
 
     return diagnostic_questions.head(10).to_dict('records')
 
-def save_student_data(student_name, topic, score, time_taken, recommended_path):
-    """Saves student data to the CSV file."""
-    # Note: Streamlit Cloud can't directly write to a GitHub repo.
-    # This function is a placeholder for a real database write.
-    # For a real app, you would use a more robust storage method.
-    st.info("Results saved! For this demo, results are not saved permanently.")
-
-    # In a real app, you would use a service like Streamlit's secrets
-    # to authenticate and write to a Gist, Google Sheets, or a database.
-
 def show_welcome_screen():
     st.title("Drona AI: Personalized Learning Path Recommender")
     st.header("The only Quantitative Aptitude teacher who teaches at your pace of learning.")
@@ -105,58 +95,6 @@ def show_welcome_screen():
         st.session_state['welcome_complete'] = True
         st.rerun()
 
-def show_student_dashboard(student_data):
-    st.title(f"Welcome back, {student_data['student_name'].iloc[0]}!")
-    st.subheader("Your Last Test Performance")
-    
-    # Display last test summary
-    last_topic = student_data['topic'].iloc[0]
-    last_score = student_data['score'].iloc[0]
-    last_time = student_data['time_taken'].iloc[0]
-    last_recommended_path = student_data['recommended_path'].iloc[0]
-
-    st.markdown(f"**Topic:** {last_topic.replace('_', ' ').title()}")
-    st.markdown(f"**Score:** {last_score}")
-    st.markdown(f"**Time Taken:** {last_time} seconds")
-    st.markdown(f"**Recommended Path:** {last_recommended_path}")
-
-    # Display chart for last performance
-    total_questions = 10  # Assuming 10 diagnostic questions per test
-    correct_count = last_score // 4  # Assuming 4 marks per question
-    incorrect_count = total_questions - correct_count
-
-    result_df = pd.DataFrame({
-        'Category': ['Correct', 'Incorrect'],
-        'Count': [correct_count, incorrect_count]
-    })
-    
-    fig, ax = plt.subplots(figsize=(8, 6))
-    ax.bar(result_df['Category'], result_df['Count'], color=['green', 'red'])
-    ax.set_title('Last Test Performance Summary')
-    ax.set_xlabel('Question Status')
-    ax.set_ylabel('Number of Questions')
-    st.pyplot(fig)
-
-    st.markdown("---")
-    st.subheader("Start a New Quiz")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Choose a New Topic"):
-            st.session_state.test_started = False
-            st.session_state.test_submitted = False
-            st.session_state.current_question_index = 0
-            st.session_state.answers = []
-            st.rerun()
-    with col2:
-        if st.button("Re-take this Topic"):
-            st.session_state.test_started = True
-            st.session_state.test_submitted = False
-            st.session_state.current_question_index = 0
-            st.session_state.answers = []
-            st.session_state.start_time = time.time()
-            st.session_state.diagnostic_questions = get_diagnostic_questions(last_topic)
-            st.rerun()
-
 def show_main_app_flow():
     # Initialize session state variables if they don't exist
     if 'student_name' not in st.session_state: st.session_state.student_name = ""
@@ -168,37 +106,28 @@ def show_main_app_flow():
     if 'diagnostic_questions' not in st.session_state: st.session_state.diagnostic_questions = []
 
     # --- Student Login and Profile Check ---
-    if not st.session_state.student_name:
+    if not st.session_state.test_started and not st.session_state.test_submitted:
         st.title("Ready to Start?")
-        student_name_input = st.text_input("Enter your name:")
-        if student_name_input:
-            logged_in_users_df = load_data("https://raw.githubusercontent.com/G-Anshuman/Ai_Personalised_learning/main/logged_in_users.csv")
-            
-            # Check if student exists
-            existing_student_data = logged_in_users_df[logged_in_users_df['student_name'].str.lower() == student_name_input.lower()]
-            
-            if not existing_student_data.empty:
-                # Returning user: Show dashboard
-                show_student_dashboard(existing_student_data)
-            else:
-                # New user: Start the normal flow
+        if not st.session_state.student_name:
+            student_name_input = st.text_input("Enter your name:")
+            if student_name_input:
                 st.session_state.student_name = student_name_input
                 st.success(f"Welcome, {st.session_state.student_name}! 👋")
                 st.rerun()
-    else:
-        st.sidebar.info(f"Welcome, {st.session_state.student_name}!")
-        st.subheader("Choose a topic:")
-        topics_display = [t.replace('_', ' ').title() for t in list(CSV_LINKS.keys())[1:]]
-        selected_topic_display = st.selectbox("Select a topic:", topics_display)
-        
-        if st.button("Start Diagnostic Test"):
-            st.session_state.selected_topic = selected_topic_display.replace(' ', '_').lower()
-            st.session_state.test_started = True
-            st.session_state.start_time = time.time()
-            st.session_state.diagnostic_questions = get_diagnostic_questions(st.session_state.selected_topic)
-            st.rerun()
+        else:
+            st.sidebar.info(f"Welcome, {st.session_state.student_name}!")
+            st.subheader("Choose a topic:")
+            topics_display = [t.replace('_', ' ').title() for t in list(CSV_LINKS.keys())[1:]]
+            selected_topic_display = st.selectbox("Select a topic:", topics_display)
+            
+            if st.button("Start Diagnostic Test"):
+                st.session_state.selected_topic = selected_topic_display.replace(' ', '_').lower()
+                st.session_state.test_started = True
+                st.session_state.start_time = time.time()
+                st.session_state.diagnostic_questions = get_diagnostic_questions(st.session_state.selected_topic)
+                st.rerun()
 
-    # --- Rest of the app flow remains the same ---
+    # --- Running the Diagnostic Test (Question by Question) ---
     if st.session_state.test_started and not st.session_state.test_submitted:
         questions = st.session_state.diagnostic_questions
         total_questions = len(questions)
@@ -237,6 +166,7 @@ def show_main_app_flow():
             st.session_state.test_submitted = True
             st.rerun()
 
+    # --- Test Results & Recommendation ---
     if st.session_state.test_submitted:
         st.progress(1.0)
         st.header("Test Completed!")
@@ -339,17 +269,10 @@ def show_main_app_flow():
                 
                 predicted_path_encoded = best_rf_model.predict(df_infer_processed)
                 predicted_path = target_encoder.inverse_transform(predicted_path_encoded)
-                recommended_path_str = predicted_path[0]
 
                 st.subheader("Your Recommended Learning Path:")
-                st.success(recommended_path_str)
-
-                # Save the new student data
-                # For this demo, we're not actually writing to the file, but this is where the call would go.
-                # In a real app, you would use a method that can write back to a file or database.
-                save_student_data(st.session_state.student_name, st.session_state.selected_topic, score, total_time, recommended_path_str)
-
-
+                st.success(predicted_path[0])
+                
         if st.button("Start Over"):
             for key in st.session_state.keys():
                 del st.session_state[key]
