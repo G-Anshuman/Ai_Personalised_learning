@@ -145,11 +145,21 @@ def main():
             st.subheader(f"Question {q_num}/{total_questions}")
             st.markdown(f"**[{question_data.get(difficulty_col, 'N/A')}]** {question_data.get(question_col, 'Question not found.')}")
 
-            options = [question_data.get(f'Option{opt}', f'Option {opt} not found') for opt in ['A', 'B', 'C', 'D']]
-            user_answer = st.radio("Choose your answer:", options, key=f"q{q_num}")
+            options = {
+                'A': question_data.get('OptionA', 'N/A'),
+                'B': question_data.get('OptionB', 'N/A'),
+                'C': question_data.get('OptionC', 'N/A'),
+                'D': question_data.get('OptionD', 'N/A')
+            }
+
+            # Create a list of labels for the radio button
+            radio_options = [f"{letter}. {text}" for letter, text in options.items()]
+            user_choice = st.radio("Choose your answer:", radio_options, key=f"q{q_num}")
 
             if st.button("Next Question"):
-                st.session_state.answers.append(user_answer)
+                # Store only the letter of the selected answer
+                selected_answer_letter = user_choice.split('.')[0].strip()
+                st.session_state.answers.append(selected_answer_letter)
                 st.session_state.current_question_index += 1
                 st.rerun()
         else:
@@ -167,29 +177,30 @@ def main():
         total_marks = 0
         questions = st.session_state.diagnostic_questions
 
-        for i, user_ans in enumerate(st.session_state.answers):
+        for i, user_ans_letter in enumerate(st.session_state.answers):
             q_data = questions[i]
             correct_answer_raw = str(q_data.get('CorrectAnswer') or q_data.get('Correct_Option')).strip()
             marks = int(q_data.get('Marks', 4))
             total_marks += marks
 
-            # Match user answer to correct answer
-            correct_opt = None
+            # Determine the correct answer letter
+            correct_opt_letter = None
             if correct_answer_raw.upper() in ["A", "B", "C", "D"]:
-                correct_opt = correct_answer_raw
+                correct_opt_letter = correct_answer_raw
             else:
                 for letter, opt_col in zip(["A", "B", "C", "D"], ["OptionA", "OptionB", "OptionC", "OptionD"]):
                     if str(q_data.get(opt_col)).strip().lower() == correct_answer_raw.lower():
-                        correct_opt = letter
+                        correct_opt_letter = letter
                         break
 
-            if user_ans and correct_opt and user_ans.split('.')[0].strip().upper() == correct_opt.upper():
+            # Evaluate against the stored letter
+            if user_ans_letter.upper() == correct_opt_letter.upper():
                 score += marks
             else:
                 wrong_answers.append({
                     "Q_No": i + 1,
-                    "Your_Answer": user_ans,
-                    "Correct_Answer": correct_opt or correct_answer_raw
+                    "Your_Answer": user_ans_letter,
+                    "Correct_Answer": correct_opt_letter
                 })
 
         st.subheader("Diagnostic Test Results")
@@ -240,7 +251,6 @@ def main():
                                 df_infer_processed[col] = encoder.transform(df_infer_processed[col])
                             except ValueError:
                                 st.warning(f"Unseen label in column '{col}'. Using a default value.")
-                                # A better approach would be to handle this robustly
                                 df_infer_processed[col] = -1
 
                     df_infer_processed["Efficiency_Score"] = df_infer_processed["Score"] / (df_infer_processed["Time Taken (seconds)"] + 1)
