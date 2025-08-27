@@ -8,6 +8,11 @@ import pickle
 import joblib
 import os
 import matplotlib.pyplot as plt
+from streamlit_gsheets import GSheetsConnection
+
+# --- Google Sheets Configuration ---
+# You need to replace 'your_sheet_id' with your Google Sheet ID
+SHEET_URL = f"https://docs.google.com/spreadsheets/d/{st.secrets['gcp_sheet_id']}/edit?usp=sharing"
 
 # --- Configuration & Data Loading ---
 CSV_LINKS = {
@@ -64,6 +69,30 @@ def get_trained_model():
 # --- Load the model and encoders once at the start of the app ---
 best_rf_model, label_encoders, target_encoder, feature_order = get_trained_model()
 
+
+@st.cache_data(ttl=60) # Cache for 60 seconds to prevent rate limiting
+def get_logged_in_users():
+    """Reads student data from the Google Sheet."""
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    df = conn.read(spreadsheet=SHEET_URL, usecols=list(range(6)), ttl=5)
+    df.columns = ["student_name", "dob", "topic", "score", "time_taken", "recommended_path"]
+    df.dropna(how="all", inplace=True)
+    return df
+
+def save_student_data(student_name, dob, topic, score, time_taken, recommended_path):
+    """Saves student data to the Google Sheet."""
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    new_data = pd.DataFrame([{
+        "student_name": student_name,
+        "dob": dob,
+        "topic": topic,
+        "score": score,
+        "time_taken": time_taken,
+        "recommended_path": recommended_path,
+    }])
+    conn.append(spreadsheet=SHEET_URL, data=new_data)
+    st.info("Your results have been saved!")
+
 def get_diagnostic_questions(topic_name):
     """Loads and returns diagnostic questions for a topic."""
     df = load_data(CSV_LINKS[topic_name])
@@ -76,6 +105,7 @@ def get_diagnostic_questions(topic_name):
         diagnostic_questions = pd.DataFrame() 
 
     return diagnostic_questions.head(10).to_dict('records')
+
 
 def show_welcome_screen():
     st.title("Drona AI: Personalized Learning Path Recommender")
@@ -95,39 +125,112 @@ def show_welcome_screen():
         st.session_state['welcome_complete'] = True
         st.rerun()
 
+def show_student_dashboard(student_data):
+    st.title(f"Welcome back, {student_data['student_name'].iloc[0]}!")
+    st.subheader("Your Last Test Performance")
+    
+    last_topic = student_data['topic'].iloc[0]
+    last_score = student_data['score'].iloc[0]
+    last_time = student_data['time_taken'].iloc[0]
+    last_recommended_path = student_data['recommended_path'].iloc[0]
+
+    st.markdown(f"**Topic:** {last_topic.replace('_', ' ').title()}")
+    st.markdown(f"**Score:** {last_score}")
+    st.markdown(f"**Time Taken:** {last_time} seconds")
+    st.markdown(f"**Recommended Path:** {last_recommended_path}")
+
+    total_questions = 10 
+    correct_count = last_score // 4 
+    incorrect_count = total_questions - correct_count
+
+    result_df = pd.DataFrame({
+        'Category': ['Correct', 'Incorrect'],
+        'Count': [correct_count, incorrect_count]
+    })
+    
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.bar(result_df['Category'], result_df['Count'], color=['green', 'red'])
+    ax.set_title('Last Test Performance Summary')
+    ax.set_xlabel('Question Status')
+    ax.set_ylabel('Number of Questions')
+    st.pyplot(fig)
+
+    st.markdown("---")
+    st.subheader("Start a New Quiz")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Choose a New Topic"):
+            st.session_state.test_started = False
+            st.session_state.test_submitted = False
+            st.session_state.current_question_index = 0
+            st.session_state.answers = []
+            st.session_state.is_returning_user = False
+            st.rerun()
+    with col2:
+        if st.button("Re-take this Topic"):
+            st.session_state.test_started = True
+            st.session_state.test_submitted = False
+            st.session_state.current_question_index = 0
+            st.session_state.answers = []
+            st.session_state.start_time = time.time()
+            st.session_state.diagnostic_questions = get_diagnostic_questions(last_topic)
+            st.session_state.is_returning_user = False
+            st.rerun()
+
 def show_main_app_flow():
-    # Initialize session state variables if they don't exist
-    if 'student_name' not in st.session_state: st.session_state.student_name = ""
-    if 'test_started' not in st.session_state: st.session_state.test_started = False
-    if 'test_submitted' not in st.session_state: st.session_state.test_submitted = False
-    if 'current_question_index' not in st.session_state: st.session_state.current_question_index = 0
-    if 'answers' not in st.session_state: st.session_state.answers = []
-    if 'start_time' not in st.session_state: st.session_state.start_time = None
-    if 'diagnostic_questions' not in st.session_state: st.session_state.diagnostic_questions = []
+    if 'is_returning_user' not in st.session_state:
+        st.session_state.is_returning_user = None
 
-    # --- Student Login and Profile Check ---
-    if not st.session_state.test_started and not st.session_state.test_submitted:
+    if st.session_state.is_returning_user is None:
         st.title("Ready to Start?")
-        if not st.session_state.student_name:
+        col_name, col_dob = st.columns(2)
+        with col_name:
             student_name_input = st.text_input("Enter your name:")
-            if student_name_input:
-                st.session_state.student_name = student_name_input
-                st.success(f"Welcome, {st.session_state.student_name}! 👋")
-                st.rerun()
-        else:
-            st.sidebar.info(f"Welcome, {st.session_state.student_name}!")
-            st.subheader("Choose a topic:")
-            topics_display = [t.replace('_', ' ').title() for t in list(CSV_LINKS.keys())[1:]]
-            selected_topic_display = st.selectbox("Select a topic:", topics_display)
-            
-            if st.button("Start Diagnostic Test"):
-                st.session_state.selected_topic = selected_topic_display.replace(' ', '_').lower()
-                st.session_state.test_started = True
-                st.session_state.start_time = time.time()
-                st.session_state.diagnostic_questions = get_diagnostic_questions(st.session_state.selected_topic)
-                st.rerun()
+        with col_dob:
+            student_dob_input = st.text_input("Enter your D.O.B. (YYYY-MM-DD):")
 
-    # --- Running the Diagnostic Test (Question by Question) ---
+        if st.button("Log In"):
+            if student_name_input and student_dob_input:
+                try:
+                    logged_in_users_df = get_logged_in_users()
+                    existing_student_data = logged_in_users_df[
+                        (logged_in_users_df['student_name'].str.lower() == student_name_input.lower()) &
+                        (logged_in_users_df['dob'] == student_dob_input)
+                    ]
+                    
+                    if not existing_student_data.empty:
+                        st.session_state.is_returning_user = True
+                        st.session_state.student_name = existing_student_data['student_name'].iloc[0]
+                        st.session_state.student_data = existing_student_data
+                        st.rerun()
+                    else:
+                        st.session_state.is_returning_user = False
+                        st.session_state.student_name = student_name_input
+                        st.session_state.student_dob = student_dob_input
+                        st.success(f"Welcome, {st.session_state.student_name}! 👋")
+                        st.rerun()
+                except Exception as e:
+                    st.error(f"An error occurred: {e}. Please check your Google Sheets connection settings.")
+            else:
+                st.warning("Please enter both your name and D.O.B.")
+        return
+
+    if st.session_state.is_returning_user:
+        show_student_dashboard(st.session_state.student_data)
+        return
+
+    st.sidebar.info(f"Welcome, {st.session_state.student_name}!")
+    st.subheader("Choose a topic:")
+    topics_display = [t.replace('_', ' ').title() for t in list(CSV_LINKS.keys())[1:]]
+    selected_topic_display = st.selectbox("Select a topic:", topics_display)
+    
+    if st.button("Start Diagnostic Test"):
+        st.session_state.selected_topic = selected_topic_display.replace(' ', '_').lower()
+        st.session_state.test_started = True
+        st.session_state.start_time = time.time()
+        st.session_state.diagnostic_questions = get_diagnostic_questions(st.session_state.selected_topic)
+        st.rerun()
+
     if st.session_state.test_started and not st.session_state.test_submitted:
         questions = st.session_state.diagnostic_questions
         total_questions = len(questions)
@@ -166,7 +269,6 @@ def show_main_app_flow():
             st.session_state.test_submitted = True
             st.rerun()
 
-    # --- Test Results & Recommendation ---
     if st.session_state.test_submitted:
         st.progress(1.0)
         st.header("Test Completed!")
@@ -269,10 +371,13 @@ def show_main_app_flow():
                 
                 predicted_path_encoded = best_rf_model.predict(df_infer_processed)
                 predicted_path = target_encoder.inverse_transform(predicted_path_encoded)
+                recommended_path_str = predicted_path[0]
 
                 st.subheader("Your Recommended Learning Path:")
-                st.success(predicted_path[0])
-                
+                st.success(recommended_path_str)
+
+                save_student_data(st.session_state.student_name, st.session_state.student_dob, st.session_state.selected_topic, score, total_time, recommended_path_str)
+
         if st.button("Start Over"):
             for key in st.session_state.keys():
                 del st.session_state[key]
