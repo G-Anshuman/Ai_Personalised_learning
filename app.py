@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 import pickle
 import joblib
-import os # Import the os module
+import os
 
 # --- Configuration & Data Loading ---
 CSV_LINKS = {
@@ -25,7 +25,7 @@ def load_data(url):
 @st.cache_resource
 def get_trained_model():
     """
-    Trains the Random Forest model and saves the necessary files.
+    Trains the Random Forest model and caches the necessary objects.
     This function is cached to run only once.
     """
     st.info("Training the model... This will only happen on the first run.")
@@ -60,7 +60,6 @@ def get_trained_model():
     rf = RandomForestClassifier(n_estimators=250, max_depth=30, min_samples_split=2, min_samples_leaf=2, max_features="sqrt", bootstrap=False, random_state=42)
     best_rf_model = rf.fit(X, y_encoded)
     
-    # Return all the necessary objects
     return best_rf_model, label_encoders, target_encoder, X.columns.tolist()
 
 def get_diagnostic_questions(topic_name):
@@ -77,12 +76,34 @@ def get_diagnostic_questions(topic_name):
     return diagnostic_questions.head(10).to_dict('records')
 
 
-# --- Main App Logic ---
-def main():
+def show_welcome_screen():
     st.title("Drona AI: Personalized Learning Path Recommender")
-    st.markdown("This app uses a machine learning model to recommend a personalized learning path based on your performance in a diagnostic test.")
+    st.header("The only Quantitative Aptitude teacher who teaches at your pace of learning.")
+    st.markdown("---")
+    
+    st.write(
+        "This app recommends the best learning path you need to follow for improving areas where you face difficulty. "
+        "It starts with a diagnostic test with 3 levels of questions: Level 1, Level 2, and Speed Test. "
+        "Based on the questions you find most difficult, along with your feedback, "
+        "Drona AI will recommend a personalized learning path tailored just for you."
+    )
+    
+    # Adding a visual element (you can replace with your own image or GIF)
+    # 
+    
+    st.markdown("---")
+    
+    if st.button("Start Your Journey ✨", use_container_width=True):
+        st.session_state['welcome_complete'] = True
+        st.rerun()
 
-    # Initialize session state variables
+
+def show_main_app_flow():
+    # Ensure get_trained_model() is called before the main flow
+    # This will load or train the model and cache it
+    get_trained_model()
+
+    # Initialize session state variables if they don't exist
     if 'student_name' not in st.session_state: st.session_state.student_name = ""
     if 'test_started' not in st.session_state: st.session_state.test_started = False
     if 'test_submitted' not in st.session_state: st.session_state.test_submitted = False
@@ -93,6 +114,7 @@ def main():
 
     # --- Step 1: Student Login & Topic Selection ---
     if not st.session_state.test_started:
+        st.title("Ready to Start?")
         if not st.session_state.student_name:
             student_name_input = st.text_input("Enter your name:")
             if student_name_input:
@@ -138,7 +160,6 @@ def main():
             user_choice = st.radio("Choose your answer:", radio_options, key=f"q{q_num}")
 
             if st.button("Next Question"):
-                # Store only the letter of the selected answer
                 selected_answer_letter = user_choice.split('.')[0].strip()
                 st.session_state.answers.append(selected_answer_letter)
                 st.session_state.current_question_index += 1
@@ -152,7 +173,6 @@ def main():
         end_time = time.time()
         total_time = round(end_time - st.session_state.start_time, 2)
 
-        # Calculate score and wrong answers
         score = 0
         wrong_answers = []
         total_marks = 0
@@ -164,7 +184,6 @@ def main():
             marks = int(q_data.get('Marks', 4))
             total_marks += marks
 
-            # Determine the correct answer letter
             correct_opt_letter = None
             if correct_answer_raw.upper() in ["A", "B", "C", "D"]:
                 correct_opt_letter = correct_answer_raw
@@ -174,7 +193,6 @@ def main():
                         correct_opt_letter = letter
                         break
 
-            # Evaluate against the stored letter
             if user_ans_letter.upper() == correct_opt_letter.upper():
                 score += marks
             else:
@@ -205,7 +223,6 @@ def main():
             st.session_state.feedback = feedback_str
             
             with st.spinner("Generating your personalized path..."):
-                # Call the cached function to get all objects
                 best_rf_model, label_encoders, target_encoder, feature_order = get_trained_model()
 
                 row = {
@@ -246,6 +263,15 @@ def main():
             for key in st.session_state.keys():
                 del st.session_state[key]
             st.rerun()
+
+def main():
+    if 'welcome_complete' not in st.session_state:
+        st.session_state.welcome_complete = False
+    
+    if st.session_state.welcome_complete:
+        show_main_app_flow()
+    else:
+        show_welcome_screen()
 
 if __name__ == "__main__":
     main()
