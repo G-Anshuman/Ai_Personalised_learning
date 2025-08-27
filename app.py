@@ -28,8 +28,6 @@ def get_trained_model():
     Trains the Random Forest model and caches the necessary objects.
     This function is cached to run only once.
     """
-    st.info("Training the model... This will only happen on the first run.")
-    
     df_student = load_data(CSV_LINKS["student_data"])
     if "Student ID" in df_student.columns:
         df_student = df_student.drop(columns=["Student ID"])
@@ -135,6 +133,10 @@ def show_main_app_flow():
         questions = st.session_state.diagnostic_questions
         total_questions = len(questions)
 
+        # Progress bar
+        progress_percentage = (st.session_state.current_question_index) / total_questions
+        st.progress(progress_percentage)
+
         if st.session_state.current_question_index < total_questions:
             q_num = st.session_state.current_question_index + 1
             question_data = questions[st.session_state.current_question_index]
@@ -155,7 +157,10 @@ def show_main_app_flow():
             radio_options = [f"{letter}. {text}" for letter, text in options.items()]
             user_choice = st.radio("Choose your answer:", radio_options, key=f"q{q_num}")
 
-            if st.button("Next Question"):
+            # Conditionally change the button text
+            button_text = "Submit Assessment" if q_num == total_questions else "Next Question"
+
+            if st.button(button_text):
                 selected_answer_letter = user_choice.split('.')[0].strip()
                 st.session_state.answers.append(selected_answer_letter)
                 st.session_state.current_question_index += 1
@@ -166,6 +171,10 @@ def show_main_app_flow():
 
     # --- Step 3: Test Results & Recommendation ---
     if st.session_state.test_submitted:
+        # Progress bar to 100%
+        st.progress(1.0)
+        st.header("Test Completed!")
+        
         end_time = time.time()
         total_time = round(end_time - st.session_state.start_time, 2)
 
