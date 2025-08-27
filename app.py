@@ -6,6 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 import pickle
 import joblib
+import os
 
 # --- Configuration & Data Loading ---
 CSV_LINKS = {
@@ -22,23 +23,12 @@ def load_data(url):
     return pd.read_csv(url)
 
 @st.cache_resource
-def train_model():
+def get_trained_model():
     """
-    Trains the Random Forest model and saves the necessary files.
-    This function will be cached and only run once.
+    Trains the Random Forest model and caches the necessary objects.
+    This function is cached to run only once.
     """
-    try:
-        joblib.load('best_rf_model.pkl')
-        with open('feature_encoders.pkl', 'rb') as f:
-            pickle.load(f)
-        with open('target_encoder.pkl', 'rb') as f:
-            pickle.load(f)
-        with open('feature_columns.pkl', 'rb') as f:
-            pickle.load(f)
-        st.info("Pre-trained model files found. Skipping training.")
-        return
-    except (FileNotFoundError, EOFError):
-        st.warning("Pre-trained model files not found. Training the model now...")
+    st.info("Training the model... This will only happen on the first run.")
     
     df_student = load_data(CSV_LINKS["student_data"])
     if "Student ID" in df_student.columns:
@@ -70,16 +60,10 @@ def train_model():
     rf = RandomForestClassifier(n_estimators=250, max_depth=30, min_samples_split=2, min_samples_leaf=2, max_features="sqrt", bootstrap=False, random_state=42)
     best_rf_model = rf.fit(X, y_encoded)
     
-    # Save the model and encoders
-    with open('feature_encoders.pkl', 'wb') as f:
-        pickle.dump(label_encoders, f)
-    with open('target_encoder.pkl', 'wb') as f:
-        pickle.dump(target_encoder, f)
-    with open('feature_columns.pkl', 'wb') as f:
-        pickle.dump(X.columns.tolist(), f)
-    joblib.dump(best_rf_model, 'best_rf_model.pkl')
-    
-    st.success("Model trained and saved successfully!")
+    return best_rf_model, label_encoders, target_encoder, X.columns.tolist()
+
+# --- Load the model and encoders once at the start of the app ---
+best_rf_model, label_encoders, target_encoder, feature_order = get_trained_model()
 
 def get_diagnostic_questions(topic_name):
     """Loads and returns diagnostic questions for a topic."""
@@ -90,17 +74,32 @@ def get_diagnostic_questions(topic_name):
     elif 'type' in df.columns:
         diagnostic_questions = df[df['type'].str.lower() == "diagnostic"]
     else:
-        diagnostic_questions = pd.DataFrame() # Fallback to empty DataFrame
+        diagnostic_questions = pd.DataFrame() 
 
     return diagnostic_questions.head(10).to_dict('records')
 
 
-# --- Main App Logic ---
-def main():
+def show_welcome_screen():
     st.title("Drona AI: Personalized Learning Path Recommender")
-    st.markdown("This app uses a machine learning model to recommend a personalized learning path based on your performance in a diagnostic test.")
+    st.header("The only Quantitative Aptitude teacher who teaches at your pace of learning.")
+    st.markdown("---")
+    
+    st.write(
+        "This app recommends the best learning path you need to follow for improving areas where you face difficulty. "
+        "It starts with a diagnostic test with 3 levels of questions: Level 1, Level 2, and Speed Test. "
+        "Based on the questions you find most difficult, along with your feedback, "
+        "Drona AI will recommend a personalized learning path tailored just for you."
+    )
+    
+    st.markdown("---")
+    
+    if st.button("Start Your Journey ✨", use_container_width=True):
+        st.session_state['welcome_complete'] = True
+        st.rerun()
 
-    # Initialize session state variables
+
+def show_main_app_flow():
+    # Initialize session state variables if they don't exist
     if 'student_name' not in st.session_state: st.session_state.student_name = ""
     if 'test_started' not in st.session_state: st.session_state.test_started = False
     if 'test_submitted' not in st.session_state: st.session_state.test_submitted = False
@@ -111,6 +110,7 @@ def main():
 
     # --- Step 1: Student Login & Topic Selection ---
     if not st.session_state.test_started:
+        st.title("Ready to Start?")
         if not st.session_state.student_name:
             student_name_input = st.text_input("Enter your name:")
             if student_name_input:
@@ -152,12 +152,10 @@ def main():
                 'D': question_data.get('OptionD', 'N/A')
             }
 
-            # Create a list of labels for the radio button
             radio_options = [f"{letter}. {text}" for letter, text in options.items()]
             user_choice = st.radio("Choose your answer:", radio_options, key=f"q{q_num}")
 
             if st.button("Next Question"):
-                # Store only the letter of the selected answer
                 selected_answer_letter = user_choice.split('.')[0].strip()
                 st.session_state.answers.append(selected_answer_letter)
                 st.session_state.current_question_index += 1
@@ -171,7 +169,6 @@ def main():
         end_time = time.time()
         total_time = round(end_time - st.session_state.start_time, 2)
 
-        # Calculate score and wrong answers
         score = 0
         wrong_answers = []
         total_marks = 0
@@ -183,7 +180,6 @@ def main():
             marks = int(q_data.get('Marks', 4))
             total_marks += marks
 
-            # Determine the correct answer letter
             correct_opt_letter = None
             if correct_answer_raw.upper() in ["A", "B", "C", "D"]:
                 correct_opt_letter = correct_answer_raw
@@ -193,7 +189,6 @@ def main():
                         correct_opt_letter = letter
                         break
 
-            # Evaluate against the stored letter
             if user_ans_letter.upper() == correct_opt_letter.upper():
                 score += marks
             else:
@@ -224,56 +219,53 @@ def main():
             st.session_state.feedback = feedback_str
             
             with st.spinner("Generating your personalized path..."):
-                try:
-                    best_rf_model = joblib.load('best_rf_model.pkl')
-                    with open('feature_encoders.pkl', 'rb') as f:
-                        label_encoders = pickle.load(f)
-                    with open('target_encoder.pkl', 'rb') as f:
-                        target_encoder = pickle.load(f)
-                    with open('feature_columns.pkl', 'rb') as f:
-                        feature_order = pickle.load(f)
+                row = {
+                    "Topic": st.session_state.selected_topic,
+                    "Score": score,
+                    "Time Taken (seconds)": total_time,
+                    "Feedback": st.session_state.feedback,
+                    "Attempts": 1
+                }
+                df_infer = pd.DataFrame([row])
 
-                    row = {
-                        "Topic": st.session_state.selected_topic,
-                        "Score": score,
-                        "Time Taken (seconds)": total_time,
-                        "Feedback": st.session_state.feedback,
-                        "Attempts": 1
-                    }
-                    df_infer = pd.DataFrame([row])
-
-                    df_infer_processed = df_infer.copy()
-                    df_infer_processed["Topic"] = df_infer_processed["Topic"].str.lower().str.replace(" ", "").str.replace("and", "").str.replace("_", "")
-                    
-                    for col, encoder in label_encoders.items():
-                        if col in df_infer_processed.columns:
-                            try:
-                                df_infer_processed[col] = encoder.transform(df_infer_processed[col])
-                            except ValueError:
-                                st.warning(f"Unseen label in column '{col}'. Using a default value.")
-                                df_infer_processed[col] = -1
-
-                    df_infer_processed["Efficiency_Score"] = df_infer_processed["Score"] / (df_infer_processed["Time Taken (seconds)"] + 1)
-                    df_infer_processed["Norm_Time"] = df_infer_processed["Time Taken (seconds)"] / (df_infer_processed["Attempts"] + 1)
-                    df_infer_processed["Accuracy_per_Attempt"] = df_infer_processed["Score"] / (df_infer_processed["Attempts"] + 1)
-                    df_infer_processed["Time_per_Point"] = df_infer_processed["Time Taken (seconds)"] / df_infer_processed["Score"].replace(0, np.nan)
-                    df_infer_processed["Time_per_Point"] = df_infer_processed["Time_per_Point"].fillna(df_infer_processed["Time Taken (seconds)"])
-                    
-                    df_infer_processed = df_infer_processed[feature_order]
-                    
-                    predicted_path_encoded = best_rf_model.predict(df_infer_processed)
-                    predicted_path = target_encoder.inverse_transform(predicted_path_encoded)
-
-                    st.subheader("Your Recommended Learning Path:")
-                    st.success(predicted_path[0])
-
-                except FileNotFoundError:
-                    st.error("Model files not found. Please ensure the model and encoders are saved in the repository.")
+                df_infer_processed = df_infer.copy()
+                df_infer_processed["Topic"] = df_infer_processed["Topic"].str.lower().str.replace(" ", "").str.replace("and", "").str.replace("_", "")
                 
+                for col, encoder in label_encoders.items():
+                    if col in df_infer_processed.columns:
+                        try:
+                            df_infer_processed[col] = encoder.transform(df_infer_processed[col])
+                        except ValueError:
+                            st.warning(f"Unseen label in column '{col}'. Using a default value.")
+                            df_infer_processed[col] = -1
+
+                df_infer_processed["Efficiency_Score"] = df_infer_processed["Score"] / (df_infer_processed["Time Taken (seconds)"] + 1)
+                df_infer_processed["Norm_Time"] = df_infer_processed["Time Taken (seconds)"] / (df_infer_processed["Attempts"] + 1)
+                df_infer_processed["Accuracy_per_Attempt"] = df_infer_processed["Score"] / (df_infer_processed["Attempts"] + 1)
+                df_infer_processed["Time_per_Point"] = df_infer_processed["Time Taken (seconds)"] / df_infer_processed["Score"].replace(0, np.nan)
+                df_infer_processed["Time_per_Point"] = df_infer_processed["Time_per_Point"].fillna(df_infer_processed["Time Taken (seconds)"])
+                
+                df_infer_processed = df_infer_processed[feature_order]
+                
+                predicted_path_encoded = best_rf_model.predict(df_infer_processed)
+                predicted_path = target_encoder.inverse_transform(predicted_path_encoded)
+
+                st.subheader("Your Recommended Learning Path:")
+                st.success(predicted_path[0])
+
         if st.button("Start Over"):
             for key in st.session_state.keys():
                 del st.session_state[key]
             st.rerun()
+
+def main():
+    if 'welcome_complete' not in st.session_state:
+        st.session_state.welcome_complete = False
+    
+    if st.session_state.welcome_complete:
+        show_main_app_flow()
+    else:
+        show_welcome_screen()
 
 if __name__ == "__main__":
     main()
