@@ -6,6 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 import pickle
 import joblib
+import os # Import the os module
 
 # --- Configuration & Data Loading ---
 CSV_LINKS = {
@@ -22,23 +23,12 @@ def load_data(url):
     return pd.read_csv(url)
 
 @st.cache_resource
-def train_model():
+def get_trained_model():
     """
     Trains the Random Forest model and saves the necessary files.
-    This function will be cached and only run once.
+    This function is cached to run only once.
     """
-    try:
-        joblib.load('best_rf_model.pkl')
-        with open('feature_encoders.pkl', 'rb') as f:
-            pickle.load(f)
-        with open('target_encoder.pkl', 'rb') as f:
-            pickle.load(f)
-        with open('feature_columns.pkl', 'rb') as f:
-            pickle.load(f)
-        st.info("Pre-trained model files found. Skipping training.")
-        return
-    except (FileNotFoundError, EOFError):
-        st.warning("Pre-trained model files not found. Training the model now...")
+    st.info("Training the model... This will only happen on the first run.")
     
     df_student = load_data(CSV_LINKS["student_data"])
     if "Student ID" in df_student.columns:
@@ -70,16 +60,8 @@ def train_model():
     rf = RandomForestClassifier(n_estimators=250, max_depth=30, min_samples_split=2, min_samples_leaf=2, max_features="sqrt", bootstrap=False, random_state=42)
     best_rf_model = rf.fit(X, y_encoded)
     
-    # Save the model and encoders
-    with open('feature_encoders.pkl', 'wb') as f:
-        pickle.dump(label_encoders, f)
-    with open('target_encoder.pkl', 'wb') as f:
-        pickle.dump(target_encoder, f)
-    with open('feature_columns.pkl', 'wb') as f:
-        pickle.dump(X.columns.tolist(), f)
-    joblib.dump(best_rf_model, 'best_rf_model.pkl')
-    
-    st.success("Model trained and saved successfully!")
+    # Return all the necessary objects
+    return best_rf_model, label_encoders, target_encoder, X.columns.tolist()
 
 def get_diagnostic_questions(topic_name):
     """Loads and returns diagnostic questions for a topic."""
@@ -90,7 +72,7 @@ def get_diagnostic_questions(topic_name):
     elif 'type' in df.columns:
         diagnostic_questions = df[df['type'].str.lower() == "diagnostic"]
     else:
-        diagnostic_questions = pd.DataFrame() # Fallback to empty DataFrame
+        diagnostic_questions = pd.DataFrame() 
 
     return diagnostic_questions.head(10).to_dict('records')
 
@@ -152,7 +134,6 @@ def main():
                 'D': question_data.get('OptionD', 'N/A')
             }
 
-            # Create a list of labels for the radio button
             radio_options = [f"{letter}. {text}" for letter, text in options.items()]
             user_choice = st.radio("Choose your answer:", radio_options, key=f"q{q_num}")
 
@@ -224,52 +205,43 @@ def main():
             st.session_state.feedback = feedback_str
             
             with st.spinner("Generating your personalized path..."):
-                try:
-                    best_rf_model = joblib.load('best_rf_model.pkl')
-                    with open('feature_encoders.pkl', 'rb') as f:
-                        label_encoders = pickle.load(f)
-                    with open('target_encoder.pkl', 'rb') as f:
-                        target_encoder = pickle.load(f)
-                    with open('feature_columns.pkl', 'rb') as f:
-                        feature_order = pickle.load(f)
+                # Call the cached function to get all objects
+                best_rf_model, label_encoders, target_encoder, feature_order = get_trained_model()
 
-                    row = {
-                        "Topic": st.session_state.selected_topic,
-                        "Score": score,
-                        "Time Taken (seconds)": total_time,
-                        "Feedback": st.session_state.feedback,
-                        "Attempts": 1
-                    }
-                    df_infer = pd.DataFrame([row])
+                row = {
+                    "Topic": st.session_state.selected_topic,
+                    "Score": score,
+                    "Time Taken (seconds)": total_time,
+                    "Feedback": st.session_state.feedback,
+                    "Attempts": 1
+                }
+                df_infer = pd.DataFrame([row])
 
-                    df_infer_processed = df_infer.copy()
-                    df_infer_processed["Topic"] = df_infer_processed["Topic"].str.lower().str.replace(" ", "").str.replace("and", "").str.replace("_", "")
-                    
-                    for col, encoder in label_encoders.items():
-                        if col in df_infer_processed.columns:
-                            try:
-                                df_infer_processed[col] = encoder.transform(df_infer_processed[col])
-                            except ValueError:
-                                st.warning(f"Unseen label in column '{col}'. Using a default value.")
-                                df_infer_processed[col] = -1
-
-                    df_infer_processed["Efficiency_Score"] = df_infer_processed["Score"] / (df_infer_processed["Time Taken (seconds)"] + 1)
-                    df_infer_processed["Norm_Time"] = df_infer_processed["Time Taken (seconds)"] / (df_infer_processed["Attempts"] + 1)
-                    df_infer_processed["Accuracy_per_Attempt"] = df_infer_processed["Score"] / (df_infer_processed["Attempts"] + 1)
-                    df_infer_processed["Time_per_Point"] = df_infer_processed["Time Taken (seconds)"] / df_infer_processed["Score"].replace(0, np.nan)
-                    df_infer_processed["Time_per_Point"] = df_infer_processed["Time_per_Point"].fillna(df_infer_processed["Time Taken (seconds)"])
-                    
-                    df_infer_processed = df_infer_processed[feature_order]
-                    
-                    predicted_path_encoded = best_rf_model.predict(df_infer_processed)
-                    predicted_path = target_encoder.inverse_transform(predicted_path_encoded)
-
-                    st.subheader("Your Recommended Learning Path:")
-                    st.success(predicted_path[0])
-
-                except FileNotFoundError:
-                    st.error("Model files not found. Please ensure the model and encoders are saved in the repository.")
+                df_infer_processed = df_infer.copy()
+                df_infer_processed["Topic"] = df_infer_processed["Topic"].str.lower().str.replace(" ", "").str.replace("and", "").str.replace("_", "")
                 
+                for col, encoder in label_encoders.items():
+                    if col in df_infer_processed.columns:
+                        try:
+                            df_infer_processed[col] = encoder.transform(df_infer_processed[col])
+                        except ValueError:
+                            st.warning(f"Unseen label in column '{col}'. Using a default value.")
+                            df_infer_processed[col] = -1
+
+                df_infer_processed["Efficiency_Score"] = df_infer_processed["Score"] / (df_infer_processed["Time Taken (seconds)"] + 1)
+                df_infer_processed["Norm_Time"] = df_infer_processed["Time Taken (seconds)"] / (df_infer_processed["Attempts"] + 1)
+                df_infer_processed["Accuracy_per_Attempt"] = df_infer_processed["Score"] / (df_infer_processed["Attempts"] + 1)
+                df_infer_processed["Time_per_Point"] = df_infer_processed["Time Taken (seconds)"] / df_infer_processed["Score"].replace(0, np.nan)
+                df_infer_processed["Time_per_Point"] = df_infer_processed["Time_per_Point"].fillna(df_infer_processed["Time Taken (seconds)"])
+                
+                df_infer_processed = df_infer_processed[feature_order]
+                
+                predicted_path_encoded = best_rf_model.predict(df_infer_processed)
+                predicted_path = target_encoder.inverse_transform(predicted_path_encoded)
+
+                st.subheader("Your Recommended Learning Path:")
+                st.success(predicted_path[0])
+
         if st.button("Start Over"):
             for key in st.session_state.keys():
                 del st.session_state[key]
